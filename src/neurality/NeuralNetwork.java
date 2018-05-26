@@ -32,7 +32,7 @@ public class NeuralNetwork {
 		
 		boolean[][] dormant = new boolean[map.width][map.height];
 		
-		for(int ix = map.width - 1; ix >= 0; ix++)
+		for(int ix = map.width - 1; ix >= 0; ix--)
 			for(int iy = 0; iy < map.height; iy++){
 				if(map.map[ix][iy] != null && !dormant[ix][iy]){
 					for(int kx = ix+1; kx < map.width; kx++)
@@ -111,19 +111,19 @@ public class NeuralNetwork {
 	 * Update every neuron. Call this every "tick" in your simulation's update loop.
 	 */
 	public void tick(){
-		for(int i = 0; i < inputLayer.length; i++) inputLayer[i].update(new double[0]);
+		for(int i = 0; i < inputLayer.length; i++) inputLayer[i].output = inputLayer[i].update(new double[0]);
 		for(int ix = 0; ix < hiddenLayers.length; ix++)
 			for(int iy = 0; iy < hiddenLayers[ix].length; iy++){
 				for(int i = 0; i < hiddenLayers[ix][iy].inputs.length; i++){
 					hiddenLayers[ix][iy].values[i] = hiddenLayers[ix][iy].inputs[i].output;
 				}
-				hiddenLayers[ix][iy].update(hiddenLayers[ix][iy].values);
+				hiddenLayers[ix][iy].output = hiddenLayers[ix][iy].update(hiddenLayers[ix][iy].values);
 			}
 		for(int ix = 0; ix < outputLayer.length; ix++){
 			for(int i = 0; i < outputLayer[ix].inputs.length; i++){
 				outputLayer[ix].values[i] = outputLayer[ix].inputs[i].output;
 			}
-			outputLayer[ix].update(outputLayer[ix].values);
+			outputLayer[ix].output = outputLayer[ix].update(outputLayer[ix].values);
 		}
 	}
 	

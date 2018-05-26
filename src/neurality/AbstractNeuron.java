@@ -8,7 +8,7 @@ package neurality;
 
 public abstract class AbstractNeuron {
 	
-	AbstractNeuron[] inputs;
+	AbstractNeuron[] inputs = new AbstractNeuron[0];
 	int maxInputs;
 	double output = 0;
 	double[] values;
