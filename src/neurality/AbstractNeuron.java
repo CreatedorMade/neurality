@@ -5,6 +5,7 @@ public abstract class AbstractNeuron {
 	AbstractNeuron[] inputs;
 	int maxInputs;
 	double output = 0;
+	double[] values;
 	
 	public AbstractNeuron(AbstractNeuron[] inputs, int maxInputs, double[] mods){
 		this.maxInputs = maxInputs;
@@ -16,6 +17,7 @@ public abstract class AbstractNeuron {
 				this.inputs[this.inputs.length-1] = n;
 			}
 		}
+		values = new double[inputs.length];
 		start(mods);
 	}
 	

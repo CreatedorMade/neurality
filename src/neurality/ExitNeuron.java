@@ -2,8 +2,8 @@ package neurality;
 
 public class ExitNeuron extends AbstractNeuron {
 
-	public ExitNeuron(AbstractNeuron[] inputs, int maxInputs, double[] mods) {
-		super(inputs, maxInputs, mods);
+	public ExitNeuron(AbstractNeuron[] inputs) {
+		super(inputs, -1, new double[0]);
 	}
 
 	@Override
