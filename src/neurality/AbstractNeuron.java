@@ -13,6 +13,9 @@ public abstract class AbstractNeuron {
 	double output = 0;
 	double[] values;
 	
+	int x = 0;
+	int y = 0;
+	
 	/**
 	 * The constructor for any subclass of AbstractNeuron should just call super(...). Upon attempting to register a neuron class without an exact match for this constructor, the registry will throw a NoSuchMethodException. 
 	 */

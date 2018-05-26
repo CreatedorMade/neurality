@@ -98,7 +98,7 @@ public class NeuralMap {
 		connections = template.connections;
 		
 		for(int i = 0; i < radiation; i++){
-			//TODO add radiation
+			//if()
 		}
 	}
 	

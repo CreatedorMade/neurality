@@ -69,7 +69,14 @@ public class NeuralNetwork {
 							inputs[ii] = inputLayer[map.connections[ix][iy][i][1]];
 							ii++;
 						} else if(!dormant[map.connections[ix][iy][i][0] - 1][map.connections[ix][iy][i][1]]){
-							inputs[ii] = hiddenLayers[map.connections[ix][iy][i][0] - 1][map.connections[ix][iy][i][1]];
+							for(AbstractNeuron t : hiddenLayers[map.connections[ix][iy][i][0]-1]) {
+								if(t.y == map.connections[ix][iy][i][1]) {
+									inputs[ii] = t;
+									break;
+									//Let's hope this loop breaks eventually
+									//If it doesn't your computer is haunted
+								}
+							}
 							ii++;
 						}
 					}
@@ -78,6 +85,8 @@ public class NeuralNetwork {
 					for(int i = 0; i < map.map[ix][iy].modCount; i++) mods[i] = map.mods[ix][iy][i];
 					
 					hiddenLayers[ix][li] = map.map[ix][iy].constructor.newInstance(inputs, map.map[ix][iy].maxInputs, mods);
+					hiddenLayers[ix][li].x = ix;
+					hiddenLayers[ix][li].y = iy;
 					li++;
 				}
 			}
@@ -98,7 +107,12 @@ public class NeuralNetwork {
 					inputs[ii] = inputLayer[map.outputConnections[ix][i][1]];
 					ii++;
 				} else if(!dormant[map.outputConnections[ix][i][0] - 1][map.outputConnections[ix][i][1]]){
-					inputs[ii] = hiddenLayers[map.outputConnections[ix][i][0] - 1][map.outputConnections[ix][i][1]];
+					for(AbstractNeuron t : hiddenLayers[map.outputConnections[ix][i][0]-1]) {
+						if(t.y == map.outputConnections[ix][i][1]) {
+							inputs[ii] = t;
+							break;
+						}
+					}
 					ii++;
 				}
 			}
