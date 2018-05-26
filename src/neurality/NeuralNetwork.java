@@ -2,6 +2,11 @@ package neurality;
 
 import java.lang.reflect.InvocationTargetException;
 
+/**
+ * The class that does all the work. Transcribed from neural maps.
+ * @author James
+ *
+ */
 public class NeuralNetwork {
 	
 	NeuralMap map;
@@ -10,6 +15,14 @@ public class NeuralNetwork {
 	private AbstractNeuron[][] hiddenLayers;
 	private ExitNeuron[] outputLayer;
 	
+	/**
+	 * Transcribe a new neural network from a map. This constructs every single neuron in the network. Some details from the map may be omitted during transcription for optimization purposes.
+	 * @param map The map to transcribe from. The transcribed network will be identical to any other networks transcribed from the same map.
+	 * @throws InstantiationException If something is terribly wrong.
+	 * @throws IllegalAccessException If something is terribly wrong.
+	 * @throws IllegalArgumentException If something is terribly wrong.
+	 * @throws InvocationTargetException If something is terribly wrong.
+	 */
 	public NeuralNetwork(NeuralMap map) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException{
 
 		this.map = map;
@@ -94,6 +107,9 @@ public class NeuralNetwork {
 		}
 	}
 	
+	/**
+	 * Update every neuron. Call this every "tick" in your simulation's update loop.
+	 */
 	public void tick(){
 		for(int i = 0; i < inputLayer.length; i++) inputLayer[i].update(new double[0]);
 		for(int ix = 0; ix < hiddenLayers.length; ix++)
@@ -111,10 +127,22 @@ public class NeuralNetwork {
 		}
 	}
 	
+	/**
+	 * Set the value of the specified input.
+	 * @param index The input to set. Values outside of the input layer will generate an ArrayIndexOutOfBoundsException.
+	 * @param value The value to set. This gets sent to all neurons that take input from this specific input.
+	 * @throws ArrayIndexOutOfBoundsException If the index is outside of the input layer.
+	 */
 	public void setInput(int index, double value){
 		inputLayer[index].setValue(value);
 	}
 	
+	/**
+	 * 
+	 * @param index The output to get data from.
+	 * @return The sum of all data being sent to this output.
+	 * @throws ArrayIndexOutOfBoundsException If the index is outside of the output layer.
+	 */
 	public double getOutput(int index){
 		return outputLayer[index].getValue();
 	}

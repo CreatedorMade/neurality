@@ -2,6 +2,11 @@ package neurality;
 
 import neurality.NeuralRegistry.NeuronWrapper;
 
+/**
+ * The "blueprint" class for neural networks. Maps do not contain actual neurons, rather they contain the information to build a neural network.
+ * @author James
+ *
+ */
 public class NeuralMap {
 	
 	NeuralRegistry registry;
@@ -17,6 +22,14 @@ public class NeuralMap {
 	int inputs;
 	int outputs;
 	
+	/**
+	 * Generate a new map from scratch.
+	 * @param registry The registry to draw instantiatable types and parameters from.
+	 * @param width The number of hidden layers in this map.
+	 * @param height The maximum size of all hidden layers.
+	 * @param inputs The size of the input layer (i.e. the number of inputs).
+	 * @param outputs The size of the output layer (i.e. the number of outputs).
+	 */
 	public NeuralMap(NeuralRegistry registry, int width, int height, int inputs, int outputs){
 		this.registry = registry;
 		this.width = width;
@@ -70,6 +83,11 @@ public class NeuralMap {
 		}
 	}
 	
+	/**
+	 * Generate this map as a clone of another.
+	 * @param template The map to clone.
+	 * @param radiation The number of times to mutate the new map. A value of 0 will result in the clone being identical to its template.
+	 */
 	public NeuralMap(NeuralMap template, int radiation){
 		registry = template.registry;
 		width = template.width;
@@ -80,7 +98,7 @@ public class NeuralMap {
 		connections = template.connections;
 		
 		for(int i = 0; i < radiation; i++){
-			
+			//TODO add radiation
 		}
 	}
 	
