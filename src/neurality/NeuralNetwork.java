@@ -41,7 +41,7 @@ public class NeuralNetwork {
 								if(map.connections[kx][ky][i][0] - 1 == ix && map.connections[kx][ky][i][1] == ky) dormant[ix][iy] = false;
 						}
 					for(int i = 0; i < map.outputs; i++)
-						if(map.outputConnections[i].length != 0) for(int k = 0; k < map.outputConnections.length; k++)
+						if(map.outputConnections[i].length != 0) for(int k = 0; k < map.outputConnections[i].length; k++)
 							if(map.outputConnections[i][k][0] - 1 == ix && map.outputConnections[i][k][1] == iy) dormant[ix][iy] = false;
 				} else dormant[ix][iy] = true;
 			}
