@@ -94,8 +94,36 @@ public class NeuralMap {
 		height = template.height;
 		inputs = template.inputs;
 		outputs = template.outputs;
-		map = template.map;
-		connections = template.connections;
+		
+		map = new NeuronWrapper[template.map.length][];
+		for(int i = 0; i < template.map.length; i++) map[i] = template.map[i].clone();
+		
+		connections = new int[template.connections.length][][][];
+		for(int i = 0; i < template.connections.length; i++) {
+			connections[i] = new int[template.connections[i].length][][];
+			for(int j = 0; j < template.connections[i].length; j++) {
+				connections[i][j] = new int[template.connections[i][j].length][];
+				for(int k = 0; k < template.connections[i][j].length; k++) {
+					connections[i][j][k] = template.connections[i][j][k].clone();
+				}
+			}
+		}
+		
+		outputConnections = new int[template.outputConnections.length][][];
+		for(int i = 0; i < template.outputConnections.length; i++) {
+			outputConnections[i] = new int[template.outputConnections[i].length][];
+			for(int j = 0; j < template.outputConnections[i].length; j++) {
+				outputConnections[i][j] = template.outputConnections[i][j].clone();
+			}
+		}
+		
+		mods = new double[template.mods.length][][];
+		for(int i = 0; i < template.mods.length; i++) {
+			mods[i] = new double[template.mods[i].length][];
+			for(int j = 0; j < template.mods[i].length; j++) {
+				mods[i][j] = template.mods[i][j].clone();
+			}
+		}
 		
 		for(int i = 0; i < radiation; i++){
 			int x = (int) Math.round(Math.random()*width);
@@ -114,7 +142,7 @@ public class NeuralMap {
 					inputs[inputs.length-1][0] = ix;
 					inputs[inputs.length-1][1] = iy;
 					outputConnections[y] = inputs;
-				} else {
+				} else if(outputConnections[y].length != 0) {
 					int[][] inputs = outputConnections[y];
 					int[][] temp = inputs;
 					int skip = (int) Math.round(Math.random()*(inputs.length-1));
@@ -127,8 +155,54 @@ public class NeuralMap {
 				}
 			} else {
 				int y = (int) Math.round(Math.random()*(height-1));
-				double s = Math.random();
-				if(s < 0.25) {
+				if(map[x][y] != null) {
+					double s = Math.random();
+					if(s < 0.25) {
+						NeuronWrapper[] register = registry.getWrappers();
+						NeuronWrapper wrapper = register[(int) Math.round(Math.random()*(register.length-1))];
+						map[x][y] = wrapper;
+						
+						mods[x][y] = new double[wrapper.modCount];
+						for(int ii = 0; ii < wrapper.modCount; ii++) mods[x][y][ii] = wrapper.minModValue + (Math.random()*(wrapper.maxModValue-wrapper.minModValue));
+						
+						int inputCount = 0;
+						while(Math.random() > registry.getComplexity()) inputCount++;
+						connections[x][y] = new int[inputCount][2];
+						for(int ii = 0; ii < inputCount; ii++){
+							int kx = (int) Math.round(Math.random() * x);
+							int ky;
+							if(kx == 0) ky = (int) Math.round(Math.random() * (inputs-1));
+							else ky = (int) Math.round(Math.random() * (height-1));
+							connections[x][y][ii][0] = kx;
+							connections[x][y][ii][1] = ky;
+						}
+					} else if(s < 0.5) {
+						int[][] inputs = connections[x][y];
+						int[][] temp = inputs;
+						inputs = new int[inputs.length+1][2];
+						for(int k = 0; k < temp.length; k++) inputs[k] = temp[k];
+						int ix = (int) Math.round(Math.random()*x);
+						int iy;
+						if(ix == 0) iy = (int) Math.round(Math.random()*(this.inputs-1));
+						else iy = (int) Math.round(Math.random()*(this.height-1));
+						inputs[inputs.length-1][0] = ix;
+						inputs[inputs.length-1][1] = iy;
+						connections[x][y] = inputs;
+					} else if(s < 0.75 && connections[x][y].length != 0) {
+						int[][] inputs = connections[x][y];
+						int[][] temp = inputs;
+						int skip = (int) Math.round(Math.random()*(inputs.length-1));
+						inputs = new int[inputs.length-1][2];
+						for(int k = 0; k < inputs.length; k++) {
+							if(k >= skip) inputs[k] = temp[k+1];
+							else inputs[k] = temp[k];
+						}
+						connections[x][y] = inputs;
+					} else {
+						int target = (int) Math.round(Math.random()*(mods[x][y].length-1));
+						mods[x][y][target] = map[x][y].minModValue + (map[x][y].maxModValue - map[x][y].minModValue)*Math.random();
+					}
+				} else {
 					NeuronWrapper[] register = registry.getWrappers();
 					NeuronWrapper wrapper = register[(int) Math.round(Math.random()*(register.length-1))];
 					map[x][y] = wrapper;
@@ -147,31 +221,6 @@ public class NeuralMap {
 						connections[x][y][ii][0] = kx;
 						connections[x][y][ii][1] = ky;
 					}
-				} else if(s < 0.5) {
-					int[][] inputs = connections[x][y];
-					int[][] temp = inputs;
-					inputs = new int[inputs.length+1][2];
-					for(int k = 0; k < temp.length; k++) inputs[k] = temp[k];
-					int ix = (int) Math.round(Math.random()*x);
-					int iy;
-					if(ix == 0) iy = (int) Math.round(Math.random()*(this.inputs-1));
-					else iy = (int) Math.round(Math.random()*(this.height-1));
-					inputs[inputs.length-1][0] = ix;
-					inputs[inputs.length-1][1] = iy;
-					connections[x][y] = inputs;
-				} else if(s < 0.75) {
-					int[][] inputs = connections[x][y];
-					int[][] temp = inputs;
-					int skip = (int) Math.round(Math.random()*(inputs.length-1));
-					inputs = new int[inputs.length-1][2];
-					for(int k = 0; k < inputs.length; k++) {
-						if(k >= skip) inputs[k] = temp[k+1];
-						else inputs[k] = temp[k];
-					}
-					connections[x][y] = inputs;
-				} else {
-					int target = (int) Math.round(Math.random()*(mods[x][y].length-1));
-					mods[x][y][target] = map[x][y].minModValue + (map[x][y].maxModValue - map[x][y].minModValue)*Math.random();
 				}
 			}
 		}
