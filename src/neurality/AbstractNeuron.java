@@ -45,4 +45,19 @@ public abstract class AbstractNeuron {
 	 */
 	protected abstract double update(double[] data);
 	
+	protected double[] saveState(){
+	/**
+	 * Called to save data during NeuralNetwork.saveState() for consistency across saving and loading.
+	 * @return The data to be saved
+	 */
+		return new double[0];
+	}
+	
+	protected void loadState(double[] state){
+	/**
+	 * Called to restore the neuron's state after saving and loading.
+	 * @param state The state to load. This data comes from the return value of saveState().
+	 */
+	}
+	
 }

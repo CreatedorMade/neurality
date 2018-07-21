@@ -51,6 +51,12 @@ public class NeuralRegistry {
 		wrappers[wrappers.length-1] = wrapper;
 	}
 	
+	int getIndex(NeuronWrapper target){
+		for(int i = 0; i < wrappers.length; i++){
+			if(target == wrappers[i]) return i;
+		}
+		return -1;
+	}
 	
 	NeuronWrapper[] getWrappers(){ return wrappers; }
 	float getBias() { return bias; }
